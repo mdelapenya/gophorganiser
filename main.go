@@ -3,6 +3,7 @@ package main
 import (
 	"errors"
 	"os"
+	"path/filepath"
 	"strings"
 
 	"github.com/manifoldco/promptui"
@@ -30,11 +31,26 @@ func main() {
 	log.Printf("Processing images in %v", targetDir)
 }
 
-func pathExists(p string) error {
+func pathAlreadyAdded(p string) error {
+	// always check for absolute file path, to avoid duplicates
+	filePath, err := filepath.Abs(p)
+	if err != nil {
+		log.Fatalf("Cannot get absolute path for %s: %v\n", p, err)
+	}
+
 	for _, picturesDir := range picturesDirs {
-		if p == picturesDir {
-			return errors.New("Path was already added")
+		if filePath == picturesDir {
+			return errors.New("Already added")
 		}
+	}
+
+	return nil
+}
+
+func pathExists(p string) error {
+	err := pathAlreadyAdded(p)
+	if err != nil {
+		return err
 	}
 
 	fi, err := os.Stat(p)
@@ -91,5 +107,10 @@ func promptPath(label string, defaultValue string) string {
 		log.Fatalf("Prompt failed %v\n", err)
 	}
 
-	return result
+	filePath, err := filepath.Abs(result)
+	if err != nil {
+		log.Fatalf("Cannot get absolute path for %v\n", err)
+	}
+
+	return filePath
 }

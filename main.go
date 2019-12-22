@@ -34,8 +34,11 @@ func pathExists(p string) error {
 		}
 	}
 
-	if _, err := os.Stat(p); os.IsNotExist(err) {
+	fi, err := os.Stat(p)
+	if os.IsNotExist(err) {
 		return errors.New("Path does not exist")
+	} else if !fi.IsDir() {
+		return errors.New("Path is not a directory")
 	}
 
 	return nil

@@ -10,13 +10,14 @@ import (
 )
 
 var picturesDirs = []string{}
+var targetDir string
 
 func main() {
 	log.Print("Hello Gophorganiser!")
 
 	// add source directories
 	for true {
-		picturesDir := promptPath()
+		picturesDir := promptPath("Location of the pictures: ", "N")
 		picturesDirs = append(picturesDirs, picturesDir)
 
 		if !promptContinue() {
@@ -25,6 +26,8 @@ func main() {
 	}
 
 	log.Printf("We are going to process the following directories: %v", picturesDirs)
+	targetDir = promptPath("Now indicate the target directory where to store the processed images: ", "")
+	log.Printf("Processing images in %v", targetDir)
 }
 
 func pathExists(p string) error {
@@ -76,10 +79,10 @@ func promptContinue() bool {
 	return false
 }
 
-func promptPath() string {
+func promptPath(label string, defaultValue string) string {
 	prompt := promptui.Prompt{
-		Label:    "Location of the pictures: ",
-		Default:  "N",
+		Label:    label,
+		Default:  defaultValue,
 		Validate: pathExists,
 	}
 

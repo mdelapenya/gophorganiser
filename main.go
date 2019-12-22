@@ -9,10 +9,10 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
+var picturesDirs = []string{}
+
 func main() {
 	log.Print("Hello Gophorganiser!")
-
-	picturesDirs := []string{}
 
 	// add source directories
 	for true {
@@ -28,6 +28,12 @@ func main() {
 }
 
 func pathExists(p string) error {
+	for _, picturesDir := range picturesDirs {
+		if p == picturesDir {
+			return errors.New("Path was already added")
+		}
+	}
+
 	if _, err := os.Stat(p); os.IsNotExist(err) {
 		return errors.New("Path does not exist")
 	}

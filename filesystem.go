@@ -20,7 +20,7 @@ func copyFile(src, dst string, BUFFERSIZE int64) error {
 	}
 
 	if !sourceFileStat.Mode().IsRegular() {
-		return fmt.Errorf("%s is not a regular file.", src)
+		return fmt.Errorf("%s is not a regular file", src)
 	}
 
 	source, err := os.Open(src)
@@ -31,7 +31,7 @@ func copyFile(src, dst string, BUFFERSIZE int64) error {
 
 	_, err = os.Stat(dst)
 	if err == nil {
-		return fmt.Errorf("File %s already exists.", dst)
+		return fmt.Errorf("File %s already exists", dst)
 	}
 
 	destination, err := os.Create(dst)
